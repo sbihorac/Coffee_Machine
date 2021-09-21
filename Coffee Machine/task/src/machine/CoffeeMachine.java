@@ -8,68 +8,110 @@ public class CoffeeMachine {
 
         Scanner input = new Scanner(System.in);
 
-        System.out.println("Starting to make a coffee\n" + "Grinding coffee beans\n" +
-                "Boiling water\n" + "Mixing boiled water with crushed coffee beans\n" +
-                "Pouring coffee into the cup\n" + "Pouring some milk into the cup\n" +
-                "Coffee is ready!");
+        int[] inventory = new int[5];
+        inventory[0] = 400;     // water
+        inventory[1] = 540;     // milk
+        inventory[2] = 120;     // coffee beans
+        inventory[3] = 9;       // disposable cups
+        inventory[4] = 550;     // money
 
-        System.out.println("Write how many ml of water the coffee machine has: ");
-        int hasWater = input.nextInt();
+        System.out.println("The coffee machine has: \n" + "400 ml of water\n" +
+                "540 ml of milk\n" + "120 g of coffee beans\n" +
+                "9 disposable cups\n" + "$550 of money");
 
-        System.out.println("Write how many ml of milk the coffee machine has: ");
-        int hasMilk = input.nextInt();
-
-        System.out.println("Write how many grams of coffee beans the coffee machine has: ");
-        int hasCoffeeBeans = input.nextInt();
-
-        System.out.println("Write how many cups of coffee you will need: ");
-        int n = input.nextInt();
-
-        String reply = replyBack(n, hasWater, hasMilk, hasCoffeeBeans );
-
-        System.out.println(reply);
-        
+        System.out.println("Write action (buy, fill, take): ");
+        String option = input.next();
+        String action = "";
+        switch (option){
+            case "buy":
+                 action = buy(inventory);
+                break;
+            case "fill":
+                action = fill(inventory);
+                break;
+            case "take":
+                System.out.println("I gave you $500");
+                action = take(inventory);
+                break;
+            default:
+                System.out.println("That is not an option");
+        }
+        System.out.println(action);
     }
-    public static String replyBack(int n, int hasWater, int hasMilk, int hasCoffeeBeans){
-        
-        int waterPerCup = 200, milkPerCup = 50, coffeeBeansPerCup = 15;
 
-        // ingredients necessary for n cups:
-        int[] nCups = new int[3];
-        nCups[0] = n * waterPerCup;                                                 //water
-        nCups[1] = n * milkPerCup;                                                  // milk
-        nCups[2] = n * coffeeBeansPerCup;                                           // coffee beans
+    public static String buy (int[] inventory){
+        Scanner input = new Scanner(System.in);
 
-        // how many cups can be made with the ingredients at our disposal:
-        int[] maxCups = new int[3];
-        maxCups[0] = hasWater / 200;
-        maxCups[1] = hasMilk / 50;
-        maxCups[2] = hasCoffeeBeans / 15;
+        System.out.println("What do you want to buy? 1 - espresso, 2 - latte, 3 - cappuccino:");
+        int pick = input.nextInt();
+        switch (pick) {
+            case 1:
+                inventory[0] -= 250;
+                inventory[2] -= 16;
+                inventory[3] -= 1;
+                inventory[4] += 4;
+                break;
 
-        int M = Math.min(Math.min(maxCups[0],maxCups[1]),maxCups[2] );
 
-        // extra cups that the coffee machine can make:
-        int[] extraCups = new int[3];
-        extraCups[0] = maxCups[0] - n;
-        extraCups[1] = maxCups[1] - n;
-        extraCups[2] = maxCups[2] - n;
+            case 2:
+                inventory[0] -= 350;
+                inventory[1] -= 75;
+                inventory[2] -= 20;
+                inventory[3] -= 1;
+                inventory[4] += 7;
+                break;
 
-        int N = Math.min(Math.min(extraCups[0],extraCups[1]),extraCups[2]);
-
-        String ans = null;
-
-        if (nCups[0] > hasWater || nCups[1] > hasMilk || nCups[2] > hasCoffeeBeans) {
-                ans = "No, I can make only " + M + " cup(s) of coffee";
-        } else if (nCups[0] == hasWater && nCups[1] == hasMilk && nCups[2] == hasCoffeeBeans ) {
-                ans = "Yes, I can make that amount of coffee";
-        } else if (nCups[0] < hasWater && nCups[1] < hasMilk && nCups[2] < hasCoffeeBeans) {
-            if (N >= 1) {
-                ans = "Yes, I can make that amount of coffee (and even " + N + " more than that)";
-            } else if (N == 0) {
-                ans = "Yes, I can make that amount of coffee";
-            }
+            case 3:
+                inventory[0] -= 200;
+                inventory[1] -= 100;
+                inventory[2] -= 12;
+                inventory[3] -= 1;
+                inventory[4] += 6;
+                break;
+            default:
+                System.out.println("There is no such option");
+                break;
         }
 
-        return ans;
+        String remnant = "The coffee machine has: \n" + inventory[0]  + " ml of water\n" + inventory[1] +
+                " ml of milk\n" + inventory[2] + " g of coffee beans\n" + inventory[3] +
+                " disposable cups\n" + "$" + inventory[4] + " of money";
+
+        return remnant;
     }
+
+    public static String fill(int[] inventory) {
+        Scanner input = new Scanner(System.in);
+
+        System.out.println("Write how many ml of water you want to add: ");
+        int extraWater = input.nextInt();
+        System.out.println("Write how many ml of milk you want to add: ");
+        int extraMilk = input.nextInt();
+        System.out.println("Write how many grams of coffee beans you want to add: ");
+        int extraCoffeeBeans = input.nextInt();
+        System.out.println("Write how many disposable cups of coffee you want to add: ");
+        int extraDisposableCups = input.nextInt();
+
+        inventory[0] += extraWater;             // water
+        inventory[1] += extraMilk;              // milk
+        inventory[2] += extraCoffeeBeans;       // coffee beans
+        inventory[3] += extraDisposableCups;    // disposable cups
+
+        String remnant = "The coffee machine has: \n" + inventory[0] + " ml of water\n" + inventory[1] +
+                " ml of milk\n" + inventory[2] + " g of coffee beans\n" + inventory[3] +
+                " disposable cups\n" + "$" + inventory[4] + " of money";
+
+        return remnant;
+    }
+
+    public static String take(int[] inventory){
+
+        inventory[4] -= inventory[4];
+        String remnant = "The coffee machine has: \n" + inventory[0] + " ml of water\n" + inventory[1] +
+                " ml of milk\n" + inventory[2] + " g of coffee beans\n" + inventory[3] +
+                " disposable cups\n" + "$" + inventory[4] + " of money";
+
+        return remnant;
+    }
+
 }
