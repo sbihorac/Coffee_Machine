@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 public class CoffeeMachine {
 
-    public static void main(String[] args) {
+    public static void service(String[] args) {
 
         Scanner input = new Scanner(System.in);
         int[] contents = new int[5];
